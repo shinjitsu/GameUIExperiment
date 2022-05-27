@@ -41,6 +41,11 @@ func loadImageNineSlice(path string, folder string, embedLoc embed.FS, centerWid
 		nil
 }
 
+func loadNineSliceSimple(path string, folder string, embedLoc embed.FS, borderWidth int, borderHeight int) *image.NineSlice {
+	img := loadPNGImageFromEmbedded(path, embedLoc, folder)
+	return image.NewNineSliceSimple(img, borderWidth, borderHeight)
+}
+
 //func loadButtonResources() (*widget.ButtonImage, error) {
 //	idle, err := loadImageNineSlice("button-idle.png", 12, 0)
 //	if err != nil {
