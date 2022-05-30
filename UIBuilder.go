@@ -11,7 +11,8 @@ import (
 	"image/color"
 )
 
-func MakeUI() *ebitenui.UI {
+func MakeUI() (theGui *daddyGUI) {
+	theGui = &daddyGUI{}
 	rootContainer := widget.NewContainer(widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 		StretchHorizontal: true,
 	})),
@@ -80,9 +81,9 @@ func MakeUI() *ebitenui.UI {
 	)
 
 	topButtonsContainer.AddChild(makeButton)
-	xEntryField := makeTextField(UIgraphics, "Enter X location                           ")
-	yEntryField := makeTextField(UIgraphics, "Enter Y location                            ")
-	xEntryField.GetWidget().SetLocation(image.Rectangle{
+	theGui.xEntryField = makeTextField(UIgraphics, "Enter X location                           ")
+	theGui.yEntryField = makeTextField(UIgraphics, "Enter Y location                            ")
+	theGui.xEntryField.GetWidget().SetLocation(image.Rectangle{
 		Min: image.Point{
 			X: 200,
 			Y: 0,
@@ -91,11 +92,12 @@ func MakeUI() *ebitenui.UI {
 			X: 4000,
 			Y: 200,
 		}})
-	topButtonsContainer.AddChild(xEntryField)
-	topButtonsContainer.AddChild(yEntryField)
+	topButtonsContainer.AddChild(theGui.xEntryField)
+	topButtonsContainer.AddChild(theGui.yEntryField)
 	//topButtonsContainer.AddChild(makeButton)
 	rootContainer.AddChild(topButtonsContainer)
-	return gameUI
+	theGui.mainContainer = gameUI
+	return theGui
 }
 
 func loadButtonImage(imagePict string, embeddedLoc embed.FS) *uiImage.NineSlice {
