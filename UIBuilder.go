@@ -18,23 +18,42 @@ func MakeUI() *ebitenui.UI {
 		widget.ContainerOpts.Layout(widget.NewRowLayout(
 			widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 			widget.RowLayoutOpts.Spacing(10),
+			widget.RowLayoutOpts.Padding(widget.Insets{
+				Top:    10,
+				Bottom: 10,
+				Left:   10,
+			}),
 		)),
+		//widget.ContainerOpts.Layout(widget.NewGridLayout(
+		//	widget.GridLayoutOpts.Columns(4),
+		//	widget.GridLayoutOpts.Stretch([]bool{true, true, true, false}, []bool{false}),
+		//	widget.GridLayoutOpts.Spacing(20, 0))),
 	)
 	gameUI := &ebitenui.UI{Container: rootContainer}
 	theRowLAyout := widget.NewRowLayout(
-		widget.RowLayoutOpts.Direction(widget.DirectionHorizontal),
+		widget.RowLayoutOpts.Direction(widget.DirectionVertical),
 		widget.RowLayoutOpts.Padding(widget.Insets{
 			Top:  20,
 			Left: 20,
 		}),
 		widget.RowLayoutOpts.Spacing(20),
 	)
+	//theGridLayout := widget.NewGridLayout(
+	//	widget.GridLayoutOpts.Columns(4),
+	//	widget.GridLayoutOpts.Stretch([]bool{true, true, true, false}, nil),
+	//	widget.GridLayoutOpts.Spacing(20, 0))
 	topButtonsContainer := widget.NewContainer(
-		widget.ContainerOpts.Layout(theRowLAyout))
+		widget.ContainerOpts.Layout(theRowLAyout),
+		//widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.))
+	)
 	topButtonsContainer.SetLocation(image.Rectangle{
 		Min: image.Point{
 			X: 0,
 			Y: 0,
+		},
+		Max: image.Point{
+			X: 1200,
+			Y: 200,
 		},
 	})
 
@@ -59,26 +78,28 @@ func MakeUI() *ebitenui.UI {
 		}),
 		widget.ButtonOpts.ClickedHandler(makeButtonPressed),
 	)
-	topBarWidgets := make([]widget.PreferredSizeLocateableWidget, 3, 10)
-	topBarWidgets[0] = makeButton
-	//topButtonsContainer.AddChild(makeButton)
-	xEntryField := makeTextField(UIgraphics, "Enter X location")
-	yEntryField := makeTextField(UIgraphics, "Enter Y location")
-	topBarWidgets[1] = xEntryField
-	topBarWidgets[2] = yEntryField
+
+	topButtonsContainer.AddChild(makeButton)
+	xEntryField := makeTextField(UIgraphics, "Enter X location                           ")
+	yEntryField := makeTextField(UIgraphics, "Enter Y location                            ")
+	xEntryField.GetWidget().SetLocation(image.Rectangle{
+		Min: image.Point{
+			X: 200,
+			Y: 0,
+		},
+		Max: image.Point{
+			X: 4000,
+			Y: 200,
+		}})
 	topButtonsContainer.AddChild(xEntryField)
 	topButtonsContainer.AddChild(yEntryField)
-	topButtonsContainer.AddChild(makeButton)
-	theRowLAyout.Layout(topBarWidgets, image.Rectangle{
-		Min: image.Point{0, 0},
-		Max: image.Point{1200, 200},
-	})
+	//topButtonsContainer.AddChild(makeButton)
 	rootContainer.AddChild(topButtonsContainer)
 	return gameUI
 }
 
 func loadButtonImage(imagePict string, embeddedLoc embed.FS) *uiImage.NineSlice {
-	pict, err := loadImageNineSlice(imagePict, "UIGraphics", embeddedLoc, 14, 13)
+	pict, err := loadImageNineSlice(imagePict, "UIGraphics", embeddedLoc, 5, 5)
 	if err != nil {
 		fmt.Errorf("ERROR LOADING IMAGE %s", err)
 	}
@@ -86,7 +107,7 @@ func loadButtonImage(imagePict string, embeddedLoc embed.FS) *uiImage.NineSlice 
 }
 
 func makeTextField(embeddedLoc embed.FS, prompt string) *widget.TextInput {
-	tboxrealImg := loadNineSliceSimple("TextBox2.png", "UIGraphics", embeddedLoc, 22, 24)
+	tboxrealImg := loadNineSliceSimple("TextBox4.png", "UIGraphics", embeddedLoc, 12, 8)
 
 	tboxImg := &widget.TextInputImage{
 		Idle:     tboxrealImg,
