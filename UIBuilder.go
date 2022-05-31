@@ -6,13 +6,19 @@ import (
 	"github.com/blizzy78/ebitenui"
 	uiImage "github.com/blizzy78/ebitenui/image"
 	"github.com/blizzy78/ebitenui/widget"
+	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
 	"image"
 	"image/color"
+	"log"
 )
 
 func MakeUI() (theGui *daddyGUI) {
 	theGui = &daddyGUI{}
+	font, err := loadFontFromEmbedded("NotoSans-Bold.ttf", 14, UIgraphics, "UIGraphics")
+	if err != nil {
+		log.Fatal("error loading font", err)
+	}
 	rootContainer := widget.NewContainer(widget.ContainerOpts.WidgetOpts(widget.WidgetOpts.LayoutData(widget.AnchorLayoutData{
 		StretchHorizontal: true,
 	})),
@@ -81,8 +87,8 @@ func MakeUI() (theGui *daddyGUI) {
 	)
 
 	topButtonsContainer.AddChild(makeButton)
-	theGui.xEntryField = makeTextField(UIgraphics, "Enter X location                           ")
-	theGui.yEntryField = makeTextField(UIgraphics, "Enter Y location                            ")
+	theGui.xEntryField = makeTextField(UIgraphics, "Enter X location                           ", font)
+	theGui.yEntryField = makeTextField(UIgraphics, "Enter Y location                            ", font)
 	theGui.xEntryField.GetWidget().SetLocation(image.Rectangle{
 		Min: image.Point{
 			X: 200,
@@ -108,7 +114,7 @@ func loadButtonImage(imagePict string, embeddedLoc embed.FS) *uiImage.NineSlice 
 	return pict
 }
 
-func makeTextField(embeddedLoc embed.FS, prompt string) *widget.TextInput {
+func makeTextField(embeddedLoc embed.FS, prompt string, fnt font.Face) *widget.TextInput {
 	tboxrealImg := loadNineSliceSimple("TextBox4.png", "UIGraphics", embeddedLoc, 12, 8)
 
 	tboxImg := &widget.TextInputImage{
@@ -141,9 +147,9 @@ func makeTextField(embeddedLoc embed.FS, prompt string) *widget.TextInput {
 		})),
 		widget.TextInputOpts.Image(tboxImg),
 		widget.TextInputOpts.Color(textColor),
-		widget.TextInputOpts.Face(basicfont.Face7x13),
+		widget.TextInputOpts.Face(fnt),
 		widget.TextInputOpts.CaretOpts(
-			widget.CaretOpts.Size(basicfont.Face7x13, 2),
+			widget.CaretOpts.Size(fnt, 2),
 		),
 		widget.TextInputOpts.Padding(widget.Insets{
 			Left:   13,
